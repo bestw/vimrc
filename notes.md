@@ -77,9 +77,9 @@ http://vimawesome.com
 | Ãû³Æ                | º¬Òå |
 | ------------------- | ---- |
 | `$HOME`             |      |
-| ` $VIM `            |      |
-| `$VIMRUNTIME `      |      |
-| ` $MYVIMRC `        |      |
+| `$VIM`            |      |
+| `$VIMRUNTIME`      |      |
+| `$MYVIMRC`        |      |
 | `:set all`          |      |
 | `:set`              |      |
 | `:set variable?`    |      |

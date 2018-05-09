@@ -1,7 +1,6 @@
-" vim:et:sw=2:ts=2:ff=unix:fenc=utf8:
-"
-" Maintainer: Wang Jun
-" Last Change: 2018-05-08
+" vimrc
+" Maintainer: Wang Jun <wangjun7@163.com>
+" Last Change: 2018-05-09
 
 set nocompatible
 
@@ -10,6 +9,7 @@ if has('autocmd')
   au!
 endif
 
+" vim-plug {{{
 if filereadable($HOME . '/vimfiles/autoload/plug.vim')
   " vim-plug, see https://github.com/junegunn/vim-plug
   call plug#begin('$HOME/vimfiles/plugged')
@@ -21,15 +21,43 @@ if filereadable($HOME . '/vimfiles/autoload/plug.vim')
   Plug 'aradunovic/perun.vim'
   Plug 'inkarkat/vim-ingo-library'
   Plug 'inkarkat/vim-mark'
-  Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
+  Plug 'jiangmiao/auto-pairs'
+  Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
+  Plug 'Xuyuanp/nerdtree-git-plugin', { 'on': 'NERDTreeToggle' }
   Plug 'scrooloose/nerdcommenter', { 'for': ['c', 'cpp', 'python'] }
   Plug 'vim-scripts/DoxygenToolkit.vim', { 'for': ['c', 'cpp', 'python'] }
   Plug 'vim-scripts/std_c.zip', { 'for': 'c' }
   Plug 'hdima/python-syntax', { 'for': 'python' }
+  Plug 'flniu/txt.vim', { 'for': 'txt' }
+  Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }
+
+  " TODO: snippets
+  "Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
+
+  " TODO: formart: python clang ...
+
+  " TODO: syntax check
+  "Plug 'scrooloose/syntastic'
+
+  " TODO: code completion
+
+  " TODO: search enhance
+  "Plug 'ctrlpvim/ctrlp.vim'
+  "Plug 'dyng/ctrlsf.vim'
+
+  " TODO: surround in pairs
+  "Plug 'tpope/vim-surround'
+
+  " TODO: multiline edit
+  "Plug 'terryma/vim-multiple-cursors'
+
+  " TODO: indent line show
+  "Plug 'yggdroot/indentline'
 
   " Initialize plugin system
   call plug#end()
 endif
+" }}}
 
 " 删除indent自动缩进(行首空白符),eol换行符,start插入模式开始处之前的字符
 set backspace=indent,eol,start
@@ -48,7 +76,7 @@ let &termencoding = &encoding
 set encoding=utf-8
 " 把所有的"不明宽度"字符的宽度置为双倍字符宽度(中文字符宽度)
 " need 'encoding' is unicode encoding
-"set ambiwidth=double " not for powerline fonts.
+"set ambiwidth=double
 
 " vim message language: en_US.UTF-8 , zh_CN.UTF-8
 language messages en_US.UTF-8
@@ -66,7 +94,7 @@ if has("gui_running")
           \Courier_New:h12
     " gfw need 'encoding' = utf-8
     set guifontwide=Iosevka:h13,
-          \YouYuan:h12
+          \YouYuan:h1space2
   elseif has("unix")
     set guifont=Iosevka\ 13,
           \DejaVu\ Sans\ Mono\ 12
@@ -96,8 +124,11 @@ if &t_Co > 2 || has("gui_running")
     inoremap <Char-0x07F> <BS>
     nnoremap <Char-0x07F> <BS>
   endif
-  " GUI配色方案设置
-  color perun
+  try
+    colorscheme perun
+  catch
+    colorscheme desert
+  endtry
   set background=dark
   " Vim syntax highlight, will overrule the user's setttings
   syntax on
@@ -121,6 +152,7 @@ set showcmd
 " Tab补全时命令行上行显示可能的匹配
 set wildmenu
 
+" TODO: viminfo
 "set viminfo=
 set history=1000
 set nobackup
@@ -128,7 +160,7 @@ set noswapfile
 " 文件被其他程序修改时自动载入
 set autoread
 
-" 共享外部剪贴板
+" TODO:剪贴板
 "set clipboard+=unnamed
 " At the beginning and end of the file check modelines
 set modeline
@@ -136,29 +168,60 @@ set modeline
 set autoindent
 set smartindent
 set cindent
+set smarttab
+set shiftround
+
+set linebreak
+let &showbreak='↪ '
+
+set list
+set listchars=tab:→\ ,eol:↲,nbsp:␣,trail:•,extends:⟩,precedes:⟨
 
 set autochdir
 set tags=tags;
+
+" TODO: fold
+if has('floding')
+  set foldenable
+  set foldcolumn=0
+  set foldlevelstart=99
+endif
+
 
 if has('autocmd')
   filetype plugin indent on
 
   " Reload vimrc after it's been modified.
-  autocmd bufwritepost *vimrc source $MYVIMRC
+  autocmd bufwritepost $MYVIMRC source $MYVIMRC
 endif
+
+" Key mappings {{{
+let mapleader = "\<space>" "http://blog.jobbole.com/87481/
 
 " Open vimrc file
 map  <S-F12> :e! $MYVIMRC<CR>
 imap <S-F12> <Esc>:e! $MYVIMRC<CR>a
 
-"source $VIMRUNTIME/mswin.vim
-"behave mswin
+source $VIMRUNTIME/mswin.vim
 
-"
-let mapleader = ","
 nnoremap <F1> <nop>
 
-" vim-airline
+nnoremap <C-tab> :bn<CR>
+nnoremap <C-S-tab> :bp<CR>
+
+nnoremap <F2> :NERDTreeToggle<CR>
+nmap <F8> :TagbarToggle<CR>
+
+" Toggle fold za?
+if has('folding')
+  nnoremap <leader><space> @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR>
+endif
+
+nnoremap <leader>b :bd<CR>
+"}}}
+
+" Plug settings {{{
+" vim-airline {{{
 let g:airline_powerline_fonts = 1
 let g:airline_theme = 'bubblegum'
 if !exists('g:airline_symbols')
@@ -177,17 +240,31 @@ let g:airline_symbols.branch = ''
 let g:airline_symbols.readonly = ''
 let g:airline_symbols.linenr = '☰'
 let g:airline_symbols.maxlinenr = ''
-nnoremap <C-tab> :bn<CR>
-nnoremap <C-S-tab> :bp<CR>
+"}}}
 
-" nerdtree and nerdtree-git-plugin
-nnoremap <F2> :NERDTreeToggle<CR>
+" nerdtree and nerdtree-git-plugin {{{
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
-" syntax/python.vim 
+let g:NERDTreeIndicatorMapCustom = {
+    \ "Modified"  : "m",
+    \ "Staged"    : "+",
+    \ "Untracked" : "*",
+    \ "Renamed"   : "R",
+    \ "Unmerged"  : "═",
+    \ "Deleted"   : "✖",
+    \ "Dirty"     : "✗",
+    \ "Clean"     : "✔︎",
+    \ 'Ignored'   : '☒',
+    \ "Unknown"   : "?"
+    \ }
+"}}}
+
+" syntax/python.vim {{{
 let g:python_highlight_all = 1
 let b:python_version_2 = 1
+"}}}
 
-" syntax/c.vim std_c.zip
+" syntax/c.vim std_c.zip {{{
 let c_syntax_for_h = 1
 let c_C99 = 1
 let c_cpp_warn = 1
@@ -197,4 +274,11 @@ let c_warn_digraph = 1
 let c_warn_trigraph = 1
 let c_space_errors = 1
 let c_minlines = 200
+"}}}
 
+" tagbar {{{
+"}}}
+
+"}}}
+
+" vim:et:sw=2:ts=2:ff=unix:fenc=utf8:fdm=marker:

@@ -1,7 +1,7 @@
-#vimrc
+# vimrc
 
-For own use.
+This is my vimrc files, in order to synchronize everywhere easily.
 
 ## Fonts
 
-### [Iosevka](https://be5invis.github.io/Iosevka/)
+The font used in vim is [Iosevka](https://be5invis.github.io/Iosevka/), prebuild ss09.

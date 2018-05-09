@@ -36,33 +36,6 @@ if has('autocmd')
     unlet b:my_fileencodings_bak
   endfunction
 
-  " 自动补全括号
-  autocmd Filetype c,cpp,h,vim,python,ld,lua call AutoBrackets()
-  " 实现括号的自动配对后防止重复输入
-  function! ClosePair(char)
-    if getline('.')[col('.') - 1] == a:char
-      return "\<Right>"
-    else
-      return a:char
-    endif
-  endfunction
-  function! AutoBrackets()
-    inoremap ( ()<ESC>i
-    inoremap ) <c-r>=ClosePair(')')<CR>
-    inoremap { {}<ESC>i
-    inoremap } <c-r>=ClosePair('}')<CR>
-    inoremap [ []<ESC>i
-    inoremap ] <c-r>=ClosePair(']')<CR>
-    inoremap < <><ESC>i
-    inoremap > <c-r>=ClosePair('>')<CR>
-  endfunction
-
-  " vimrc修改后重新载入
-  if has("win32")
-    autocmd bufwritepost *vimrc source $HOME/vimfiles/vimrc
-  elseif has("unix")
-    autocmd bufwritepost *vimrc source $HOME/.vim/vimrc
-  endif
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " 文件头自动更新
