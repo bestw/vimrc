@@ -31,6 +31,7 @@
 | `gg`         | 移光标至整个文本的首行首个非空格字节   |
 | `G`          | 移光标至整个文本最后一行首个非空格字节 |
 | `%`          | 移光标至匹配括号的另一端               |
+| `J`          | 合并行                                 |
 
 以行为单位时：
 
@@ -87,4 +88,14 @@ http://vimawesome.com
 | `:version`          |      |
 | `:function`         |      |
 | `:scriptnames`      |      |
+
+## 调试
+
+> http://inlehmansterms.net/2014/10/31/debugging-vim
+
+Vim 选项、键映射、缩写、用户定义的函数或命令、高亮组或者自动命令显示它最近被定义的位置
+
+```
+:verbose set textwidth
+```
 

@@ -1,6 +1,9 @@
 " vimrc
-" Maintainer: Wang Jun <wangjun7@163.com>
-" Last Change: 2018-05-09
+" Maintainer: Wang Jun
+" Last Change: 2018-05-10
+
+let s:is_win = has('win32') || has('win64')
+let s:enable_plug= 1
 
 set nocompatible
 
@@ -10,54 +13,73 @@ if has('autocmd')
 endif
 
 " vim-plug {{{
-if filereadable($HOME . '/vimfiles/autoload/plug.vim')
-  " vim-plug, see https://github.com/junegunn/vim-plug
-  call plug#begin('$HOME/vimfiles/plugged')
+if s:enable_plug
+  " Check vimrc position
+  if "vimrc" == fnamemodify(expand("$MYVIMRC"), ":p:t")
+    let s:vim_dir = fnamemodify(expand("$MYVIMRC"), ":p:h")
+  else
+    echo "Please put vimrc file in .vim/ or vimfiles/ directory."
+    exit
+  endif
 
-  " Make sure you use single quotes
+  if filereadable(s:vim_dir . '/autoload/plug.vim')
+    " vim-plug, see https://github.com/junegunn/vim-plug
+    call plug#begin(s:vim_dir . '/plugged')
 
-  Plug 'vim-airline/vim-airline'
-  Plug 'vim-airline/vim-airline-themes'
-  Plug 'aradunovic/perun.vim'
-  Plug 'inkarkat/vim-ingo-library'
-  Plug 'inkarkat/vim-mark'
-  Plug 'jiangmiao/auto-pairs'
-  Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
-  Plug 'Xuyuanp/nerdtree-git-plugin', { 'on': 'NERDTreeToggle' }
-  Plug 'scrooloose/nerdcommenter', { 'for': ['c', 'cpp', 'python'] }
-  Plug 'vim-scripts/DoxygenToolkit.vim', { 'for': ['c', 'cpp', 'python'] }
-  Plug 'vim-scripts/std_c.zip', { 'for': 'c' }
-  Plug 'hdima/python-syntax', { 'for': 'python' }
-  Plug 'flniu/txt.vim', { 'for': 'txt' }
-  Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }
+    " Make sure you use single quotes
 
-  " TODO: snippets
-  "Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
+    Plug 'vim-airline/vim-airline'
+    Plug 'vim-airline/vim-airline-themes'
+    Plug 'tpope/vim-fugitive'
 
-  " TODO: formart: python clang ...
+    " Color schemes
+    Plug 'aradunovic/perun.vim'
 
-  " TODO: syntax check
-  "Plug 'scrooloose/syntastic'
+    Plug 'inkarkat/vim-ingo-library'
+    Plug 'inkarkat/vim-mark'
+    Plug 'jiangmiao/auto-pairs'
 
-  " TODO: code completion
+    Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
+    Plug 'Xuyuanp/nerdtree-git-plugin', { 'on': 'NERDTreeToggle' }
 
-  " TODO: search enhance
-  "Plug 'ctrlpvim/ctrlp.vim'
-  "Plug 'dyng/ctrlsf.vim'
+    " Comment
+    Plug 'scrooloose/nerdcommenter', { 'for': ['c', 'cpp', 'python', 'vim'] }
+    Plug 'vim-scripts/DoxygenToolkit.vim', { 'for': ['c', 'cpp', 'python'] }
 
-  " TODO: surround in pairs
-  "Plug 'tpope/vim-surround'
+    Plug 'vim-scripts/std_c.zip', { 'for': 'c' }
+    Plug 'hdima/python-syntax', { 'for': 'python' }
+    Plug 'flniu/txt.vim', { 'for': 'txt' }
 
-  " TODO: multiline edit
-  "Plug 'terryma/vim-multiple-cursors'
+    Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }
 
-  " TODO: indent line show
-  "Plug 'yggdroot/indentline'
+    " TODO: snippets
+    " Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 
-  " Initialize plugin system
-  call plug#end()
+    " TODO: formart: python clang ...
+
+    " TODO: syntax check
+    "Plug 'scrooloose/syntastic'
+
+    " TODO: code completion
+
+    " TODO: search enhance
+    "Plug 'ctrlpvim/ctrlp.vim'
+    "Plug 'dyng/ctrlsf.vim'
+
+    " TODO: surround in pairs
+    "Plug 'tpope/vim-surround'
+
+    " TODO: multiline edit
+    "Plug 'terryma/vim-multiple-cursors'
+
+    " TODO: indent line show
+    "Plug 'yggdroot/indentline'
+
+    " Initialize plugin system
+    call plug#end()
+  endif
 endif
-" }}}
+"}}}
 
 " 删除indent自动缩进(行首空白符),eol换行符,start插入模式开始处之前的字符
 set backspace=indent,eol,start
@@ -71,7 +93,6 @@ set fileencodings=ucs-bom,utf-8,cp936,gb18030,big5,latin1
 " 设置终端编码,指定键盘输入和显示的字符编码
 " TODO: conemu not worked.
 let &termencoding = &encoding
-"set termencoding=utf-8
 " Vim 内部字符编码
 set encoding=utf-8
 " 把所有的"不明宽度"字符的宽度置为双倍字符宽度(中文字符宽度)
@@ -90,11 +111,11 @@ if has("gui_running")
   set go-=m
   " Windows GUI font settings
   if has("win32")
-    set guifont=Iosevka:h13, " Iosevka ss09
+    set guifont=Iosevka:h13,
           \Courier_New:h12
     " gfw need 'encoding' = utf-8
     set guifontwide=Iosevka:h13,
-          \YouYuan:h1space2
+          \YouYuan:h12
   elseif has("unix")
     set guifont=Iosevka\ 13,
           \DejaVu\ Sans\ Mono\ 12
@@ -180,13 +201,8 @@ set listchars=tab:→\ ,eol:↲,nbsp:␣,trail:•,extends:⟩,precedes:⟨
 set autochdir
 set tags=tags;
 
-" TODO: fold
-if has('floding')
-  set foldenable
-  set foldcolumn=0
-  set foldlevelstart=99
-endif
-
+set foldmethod=indent
+set foldlevel=99
 
 if has('autocmd')
   filetype plugin indent on
@@ -217,11 +233,11 @@ if has('folding')
   nnoremap <leader><space> @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR>
 endif
 
-nnoremap <leader>b :bd<CR>
+nnoremap <leader>q :bd<CR>
 "}}}
 
 " Plug settings {{{
-" vim-airline {{{
+" vim-airline
 let g:airline_powerline_fonts = 1
 let g:airline_theme = 'bubblegum'
 if !exists('g:airline_symbols')
@@ -230,6 +246,7 @@ endif
 " Open tabline
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#buffer_nr_show = 1
+let g:airline#extensions#tabline#formatter = 'unique_tail'
 let g:airline#extensions#whitespace#enabled = 0
 let g:airline#extensions#whitespace#symbol = '!'
 let g:airline_left_sep = ''
@@ -240,31 +257,32 @@ let g:airline_symbols.branch = ''
 let g:airline_symbols.readonly = ''
 let g:airline_symbols.linenr = '☰'
 let g:airline_symbols.maxlinenr = ''
-"}}}
 
-" nerdtree and nerdtree-git-plugin {{{
+" nerdtree and nerdtree-git-plugin
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 let g:NERDTreeIndicatorMapCustom = {
-    \ "Modified"  : "m",
-    \ "Staged"    : "+",
-    \ "Untracked" : "*",
-    \ "Renamed"   : "R",
-    \ "Unmerged"  : "═",
-    \ "Deleted"   : "✖",
-    \ "Dirty"     : "✗",
-    \ "Clean"     : "✔︎",
-    \ 'Ignored'   : '☒',
-    \ "Unknown"   : "?"
-    \ }
-"}}}
+      \ "Modified"  : "m",
+      \ "Staged"    : "+",
+      \ "Untracked" : "*",
+      \ "Renamed"   : "R",
+      \ "Unmerged"  : "═",
+      \ "Deleted"   : "✖",
+      \ "Dirty"     : "✗",
+      \ "Clean"     : "✔︎",
+      \ 'Ignored'   : '☒',
+      \ "Unknown"   : "?"
+      \ }
 
-" syntax/python.vim {{{
+" NERD Commenter
+let g:NERDSpaceDelims = 1
+let g:NERDTrimTrailingWhitespace = 1
+
+" syntax/python.vim
 let g:python_highlight_all = 1
 let b:python_version_2 = 1
-"}}}
 
-" syntax/c.vim std_c.zip {{{
+" syntax/c.vim std_c.zip
 let c_syntax_for_h = 1
 let c_C99 = 1
 let c_cpp_warn = 1
@@ -274,10 +292,6 @@ let c_warn_digraph = 1
 let c_warn_trigraph = 1
 let c_space_errors = 1
 let c_minlines = 200
-"}}}
-
-" tagbar {{{
-"}}}
 
 "}}}
 
