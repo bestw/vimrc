@@ -2,8 +2,8 @@
 " Maintainer: Wang Jun
 " Last Change: 2018-05-10
 
+let s:enable_plug = 1
 let s:is_win = has('win32') || has('win64')
-let s:enable_plug= 1
 
 set nocompatible
 
@@ -12,72 +12,79 @@ if has('autocmd')
   au!
 endif
 
+" Check vimrc position
+let s:vimrc_path = fnamemodify(expand("$MYVIMRC"), ":p:h")
+let s:vimrc_name = fnamemodify(expand("$MYVIMRC"), ":p:t")
+if "vimrc" == s:vimrc_name
+  let s:vim_dir = s:vimrc_path
+elseif ".vimrc" == s:vimrc_name
+  let s:vim_dir = s:vimrc_path . "/.vim"
+elseif "_vimrc" == s:vimrc_name
+  let s:vim_dir = s:vimrc_path . "/vimfiles"
+endif
+
+if !isdirectory(s:vim_dir)
+  language messages en_US.UTF-8
+  echo "NOT exist .vim/vimfiles directory or is not a directory, won't load plug."
+  let s:enable_plug = 0
+endif
+
 " vim-plug {{{
-if s:enable_plug
-  " Check vimrc position
-  if "vimrc" == fnamemodify(expand("$MYVIMRC"), ":p:t")
-    let s:vim_dir = fnamemodify(expand("$MYVIMRC"), ":p:h")
-  else
-    echo "Please put vimrc file in .vim/ or vimfiles/ directory."
-    exit
-  endif
+if filereadable(s:vim_dir . '/autoload/plug.vim') && s:enable_plug
+  " vim-plug, see https://github.com/junegunn/vim-plug
+  call plug#begin(s:vim_dir . '/plugged')
 
-  if filereadable(s:vim_dir . '/autoload/plug.vim')
-    " vim-plug, see https://github.com/junegunn/vim-plug
-    call plug#begin(s:vim_dir . '/plugged')
+  " Make sure you use single quotes
 
-    " Make sure you use single quotes
+  Plug 'vim-airline/vim-airline'
+  Plug 'vim-airline/vim-airline-themes'
+  Plug 'tpope/vim-fugitive'
 
-    Plug 'vim-airline/vim-airline'
-    Plug 'vim-airline/vim-airline-themes'
-    Plug 'tpope/vim-fugitive'
+  " Color schemes
+  Plug 'aradunovic/perun.vim'
 
-    " Color schemes
-    Plug 'aradunovic/perun.vim'
+  Plug 'inkarkat/vim-ingo-library'
+  Plug 'inkarkat/vim-mark'
+  Plug 'jiangmiao/auto-pairs'
 
-    Plug 'inkarkat/vim-ingo-library'
-    Plug 'inkarkat/vim-mark'
-    Plug 'jiangmiao/auto-pairs'
+  Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
+  Plug 'Xuyuanp/nerdtree-git-plugin', { 'on': 'NERDTreeToggle' }
 
-    Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
-    Plug 'Xuyuanp/nerdtree-git-plugin', { 'on': 'NERDTreeToggle' }
+  " Comment
+  Plug 'scrooloose/nerdcommenter', { 'for': ['c', 'cpp', 'python', 'vim'] }
+  Plug 'vim-scripts/DoxygenToolkit.vim', { 'for': ['c', 'cpp', 'python'] }
 
-    " Comment
-    Plug 'scrooloose/nerdcommenter', { 'for': ['c', 'cpp', 'python', 'vim'] }
-    Plug 'vim-scripts/DoxygenToolkit.vim', { 'for': ['c', 'cpp', 'python'] }
+  Plug 'vim-scripts/std_c.zip', { 'for': 'c' }
+  Plug 'hdima/python-syntax', { 'for': 'python' }
+  Plug 'flniu/txt.vim', { 'for': 'txt' }
 
-    Plug 'vim-scripts/std_c.zip', { 'for': 'c' }
-    Plug 'hdima/python-syntax', { 'for': 'python' }
-    Plug 'flniu/txt.vim', { 'for': 'txt' }
+  Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }
 
-    Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }
+  " TODO: snippets
+  " Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 
-    " TODO: snippets
-    " Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
+  " TODO: formart: python clang ...
 
-    " TODO: formart: python clang ...
+  " TODO: syntax check
+  "Plug 'scrooloose/syntastic'
 
-    " TODO: syntax check
-    "Plug 'scrooloose/syntastic'
+  " TODO: code completion
 
-    " TODO: code completion
+  " TODO: search enhance
+  "Plug 'ctrlpvim/ctrlp.vim'
+  "Plug 'dyng/ctrlsf.vim'
 
-    " TODO: search enhance
-    "Plug 'ctrlpvim/ctrlp.vim'
-    "Plug 'dyng/ctrlsf.vim'
+  " TODO: surround in pairs
+  "Plug 'tpope/vim-surround'
 
-    " TODO: surround in pairs
-    "Plug 'tpope/vim-surround'
+  " TODO: multiline edit
+  "Plug 'terryma/vim-multiple-cursors'
 
-    " TODO: multiline edit
-    "Plug 'terryma/vim-multiple-cursors'
+  " TODO: indent line show
+  "Plug 'yggdroot/indentline'
 
-    " TODO: indent line show
-    "Plug 'yggdroot/indentline'
-
-    " Initialize plugin system
-    call plug#end()
-  endif
+  " Initialize plugin system
+  call plug#end()
 endif
 "}}}
 
