@@ -43,9 +43,10 @@ if filereadable(s:vim_dir . '/autoload/plug.vim') && s:enable_plug
   " Color schemes
   Plug 'aradunovic/perun.vim'
 
-  Plug 'inkarkat/vim-ingo-library'
-  Plug 'inkarkat/vim-mark'
+  Plug 'bestw/vim-cheat40'
+  Plug 'inkarkat/vim-mark', { 'commit': '0f8628d'}
   Plug 'jiangmiao/auto-pairs'
+  "Plug 'tpope/vim-surround'
 
   Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
   Plug 'Xuyuanp/nerdtree-git-plugin', { 'on': 'NERDTreeToggle' }
@@ -56,7 +57,7 @@ if filereadable(s:vim_dir . '/autoload/plug.vim') && s:enable_plug
 
   Plug 'vim-scripts/std_c.zip', { 'for': 'c' }
   Plug 'hdima/python-syntax', { 'for': 'python' }
-  Plug 'flniu/txt.vim', { 'for': 'txt' }
+  Plug 'pboettch/vim-cmake-syntax', { 'for': 'cmake' }
 
   Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }
 
@@ -73,9 +74,6 @@ if filereadable(s:vim_dir . '/autoload/plug.vim') && s:enable_plug
   " TODO: search enhance
   "Plug 'ctrlpvim/ctrlp.vim'
   "Plug 'dyng/ctrlsf.vim'
-
-  " TODO: surround in pairs
-  "Plug 'tpope/vim-surround'
 
   " TODO: multiline edit
   "Plug 'terryma/vim-multiple-cursors'
@@ -224,31 +222,46 @@ if has('autocmd')
 
   " Reload vimrc after it's been modified.
   autocmd bufwritepost $MYVIMRC source $MYVIMRC
+
+  " File type autocmd
+  autocmd Filetype c,cpp,h  setlocal expandtab cinoptions+=:0,g0,(0,w1 shiftwidth=4 tabstop=4
+  autocmd Filetype asm      setlocal expandtab shiftwidth=4 tabstop=4
+  autocmd Filetype python   setlocal expandtab shiftwidth=4 tabstop=4
+  autocmd FileType vim      setlocal expandtab shiftwidth=2 tabstop=2
+  autocmd Filetype sh       setlocal expandtab shiftwidth=2 tabstop=2
 endif
 
 " Key mappings {{{
-let mapleader = "\<space>" "http://blog.jobbole.com/87481/
+source $VIMRUNTIME/mswin.vim
+let mapleader = "\<SPACE>" "http://blog.jobbole.com/87481/
 
 " Open vimrc file
 map  <S-F12> :e! $MYVIMRC<CR>
 imap <S-F12> <Esc>:e! $MYVIMRC<CR>a
 
-source $VIMRUNTIME/mswin.vim
-
-nnoremap <F1> <nop>
-
-nnoremap <C-tab> :bn<CR>
-nnoremap <C-S-tab> :bp<CR>
+" tab
+nnoremap <C-TAB> :bn<CR>
+nnoremap <C-S-TAB> :bp<CR>
 
 nnoremap <F2> :NERDTreeToggle<CR>
 nmap <F8> :TagbarToggle<CR>
 
 " Toggle fold za?
 if has('folding')
-  nnoremap <leader><space> @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR>
+  nnoremap <LEADER><SPACE> @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR>
 endif
 
-nnoremap <leader>q :bd<CR>
+nnoremap <LEADER>q :q<CR>
+nnoremap <LEADER>w :w<CR>
+nnoremap <LEADER>b :bd<CR>
+
+" tag jumps
+nnoremap <LEADER>tt <ESC>g<C-]>
+nnoremap <LEADER>tr <C-T>
+
+" F1
+nnoremap <F1> <NOP>
+nnoremap <F1> :Cheat40<CR>
 "}}}
 
 " Plug settings {{{
