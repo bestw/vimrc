@@ -95,10 +95,10 @@ set whichwrap=b,s,<,>,[,]
 " 多字节字符排版:分行,不插入空格
 set formatoptions+=mM
 
+" Encoding {{{
 " 尝试的字符编码列表
 set fileencodings=ucs-bom,utf-8,cp936,gb18030,big5,latin1
 " 设置终端编码,指定键盘输入和显示的字符编码
-" TODO: conemu not worked.
 let &termencoding = &encoding
 " Vim 内部字符编码
 set encoding=utf-8
@@ -109,9 +109,11 @@ set encoding=utf-8
 " vim message language: en_US.UTF-8 , zh_CN.UTF-8
 language messages en_US.UTF-8
 if has("gui_running")
-  " GUI menu language, langmenu=none -> English menu
   set langmenu=en_US.UTF-8
+  source $VIMRUNTIME/delmenu.vim
+  source $VIMRUNTIME/menu.vim
 endif
+"}}}
 
 if has("gui_running")
   set go-=T
@@ -131,7 +133,7 @@ if has("gui_running")
   endif
 
   if !exists("g:cols_lines_already_setting")
-    set columns=116 lines=32
+    set columns=110 lines=32
     " Only set once
     let g:cols_lines_already_setting = &columns
   endif
@@ -144,14 +146,20 @@ endif
 " 显示设置
 if &t_Co > 2 || has("gui_running")
   if !has("gui_running")
-    set term=xterm
+    set t_Co=256
+  endif
+
+  " ConEmu settings
+  if !empty($CONEMUBUILD)
+    set term=xterm " FIXME: encoding error in cp936
     set t_Co=256
     let &t_AB="\e[48;5;%dm"
     let &t_AF="\e[38;5;%dm"
-    " under ConEmu, <BS> may have some problems, like <DEL>.
+    " BS acts like Delete key under ConEmu when term=xterm
     inoremap <Char-0x07F> <BS>
     nnoremap <Char-0x07F> <BS>
   endif
+
   try
     colorscheme perun
   catch
