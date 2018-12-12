@@ -42,6 +42,7 @@ if filereadable(s:vim_dir . '/autoload/plug.vim') && s:enable_plug
 
   " Color schemes
   Plug 'aradunovic/perun.vim'
+  Plug 'patstockwell/vim-monokai-tasty'
 
   Plug 'bestw/vim-cheat40'
   Plug 'inkarkat/vim-mark', { 'commit': '0f8628d'}
@@ -89,7 +90,7 @@ endif
 " 删除indent自动缩进(行首空白符),eol换行符,start插入模式开始处之前的字符
 set backspace=indent,eol,start
 " 使移动光标的键在多行之间使用
-set whichwrap=b,s,<,>,[,]
+set whichwrap=b,s
 " 多字节字符排版:分行,不插入空格
 set formatoptions+=mM
 
@@ -159,7 +160,11 @@ if &t_Co > 2 || has("gui_running")
   endif
 
   try
-    colorscheme perun
+    if has("gui_running")
+      colorscheme perun
+    else
+      colorscheme vim-monokai-tasty
+    endif
   catch
     colorscheme desert
   endtry
@@ -232,7 +237,9 @@ if has('autocmd')
 endif
 
 " Key mappings {{{
-source $VIMRUNTIME/mswin.vim
+if s:is_win
+  source $VIMRUNTIME/mswin.vim
+endif
 let mapleader = "\<SPACE>" "http://blog.jobbole.com/87481/
 
 " Open vimrc file
