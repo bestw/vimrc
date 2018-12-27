@@ -1,6 +1,6 @@
 " vimrc
 " Maintainer: Wang Jun
-" Last Change: 2018-05-10
+" Last Change: 2018-12-26
 
 let s:enable_plug = 1
 let s:is_win = has('win32') || has('win64')
@@ -65,12 +65,14 @@ if filereadable(s:vim_dir . '/autoload/plug.vim') && s:enable_plug
   " TODO: snippets
   " Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 
-  " TODO: formart: python clang ...
+  " TODO: formart: python ...
+  Plug 'rhysd/vim-clang-format', { 'for': ['c', 'cpp'] }
 
   " TODO: syntax check
   "Plug 'scrooloose/syntastic'
 
   " TODO: code completion
+  "Plug 'Valloric/YouCompleteMe'
 
   " TODO: search enhance
   "Plug 'ctrlpvim/ctrlp.vim'
@@ -237,7 +239,7 @@ if has('autocmd')
 endif
 
 " Key mappings {{{
-if s:is_win
+if s:is_win || has("gui_running")
   source $VIMRUNTIME/mswin.vim
 endif
 let mapleader = "\<SPACE>" "http://blog.jobbole.com/87481/
@@ -327,6 +329,9 @@ let c_warn_digraph = 1
 let c_warn_trigraph = 1
 let c_space_errors = 1
 let c_minlines = 200
+
+" vim-clang-format
+let g:clang_format#detect_style_file = 1
 
 "}}}
 
