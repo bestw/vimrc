@@ -1,2 +1,4 @@
 plugged/
 **/tags
+.netrwhist
+autoload/*.old

@@ -57,6 +57,7 @@ if filereadable(s:vim_dir . '/autoload/plug.vim') && s:enable_plug
   Plug 'vim-scripts/DoxygenToolkit.vim', { 'for': ['c', 'cpp', 'python'] }
 
   Plug 'vim-scripts/std_c.zip', { 'for': 'c' }
+  Plug 'octol/vim-cpp-enhanced-highlight', { 'for': 'cpp' }
   Plug 'hdima/python-syntax', { 'for': 'python' }
   Plug 'pboettch/vim-cmake-syntax', { 'for': 'cmake' }
 
@@ -185,7 +186,7 @@ set ignorecase
 set showmatch
 " 显示行号
 set number
-set relativenumber
+"set relativenumber
 " 设置光标所在的行
 set cursorline
 " 显示未完成命令,可视模式里显示选择区域的大小
@@ -329,6 +330,12 @@ let c_warn_digraph = 1
 let c_warn_trigraph = 1
 let c_space_errors = 1
 let c_minlines = 200
+
+" cpp syntax highlight settings
+let g:cpp_class_scope_highlight = 1
+let g:cpp_member_variable_highlight = 1
+let g:cpp_class_decl_highlight = 1
+let g:cpp_concepts_highlight = 1
 
 " vim-clang-format
 let g:clang_format#detect_style_file = 1
