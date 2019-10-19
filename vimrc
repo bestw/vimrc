@@ -60,6 +60,7 @@ if filereadable(s:vim_dir . '/autoload/plug.vim') && s:enable_plug
   Plug 'octol/vim-cpp-enhanced-highlight', { 'for': 'cpp' }
   Plug 'hdima/python-syntax', { 'for': 'python' }
   Plug 'pboettch/vim-cmake-syntax', { 'for': 'cmake' }
+  Plug 'PProvost/vim-ps1', { 'for': 'ps1' }
 
   Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }
 
