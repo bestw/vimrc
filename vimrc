@@ -236,6 +236,7 @@ if has('autocmd')
   autocmd Filetype python   setlocal expandtab shiftwidth=4 tabstop=4
   autocmd FileType vim      setlocal expandtab shiftwidth=2 tabstop=2
   autocmd Filetype sh       setlocal expandtab shiftwidth=2 tabstop=2
+  autocmd Filetype autohotkey setlocal expandtab shiftwidth=4 tabstop=4
 endif
 
 " Key mappings {{{
@@ -263,6 +264,7 @@ endif
 nnoremap <LEADER>q :q<CR>
 nnoremap <LEADER>w :w<CR>
 nnoremap <LEADER>b :bd<CR>
+nnoremap <LEADER>d :e ++ff=dos<CR>
 
 " tag jumps
 nnoremap <LEADER>tt <ESC>g<C-]>
