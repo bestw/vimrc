@@ -42,7 +42,6 @@ if filereadable(s:vim_dir . '/autoload/plug.vim') && s:enable_plug
 
   " Color schemes
   Plug 'aradunovic/perun.vim'
-  Plug 'patstockwell/vim-monokai-tasty'
 
   Plug 'bestw/vim-cheat40'
   Plug 'inkarkat/vim-mark', { 'commit': '0f8628d'}
@@ -166,8 +165,6 @@ if &t_Co > 2 || has("gui_running")
   try
     if has("gui_running")
       colorscheme perun
-    else
-      colorscheme vim-monokai-tasty
     endif
   catch
     colorscheme desert
