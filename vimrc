@@ -60,6 +60,7 @@ if filereadable(s:vim_dir . '/autoload/plug.vim') && s:enable_plug
   Plug 'hdima/python-syntax', { 'for': 'python' }
   Plug 'pboettch/vim-cmake-syntax', { 'for': 'cmake' }
   Plug 'PProvost/vim-ps1', { 'for': 'ps1' }
+  Plug 'peterhoeg/vim-qml', {'for': 'qml'}
 
   Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }
 
@@ -151,21 +152,8 @@ if &t_Co > 2 || has("gui_running")
     set t_Co=256
   endif
 
-  " ConEmu settings
-  if !empty($CONEMUBUILD)
-    set term=xterm " FIXME: encoding error in cp936
-    set t_Co=256
-    let &t_AB="\e[48;5;%dm"
-    let &t_AF="\e[38;5;%dm"
-    " BS acts like Delete key under ConEmu when term=xterm
-    inoremap <Char-0x07F> <BS>
-    nnoremap <Char-0x07F> <BS>
-  endif
-
   try
-    if has("gui_running")
-      colorscheme perun
-    endif
+    colorscheme perun
   catch
     colorscheme desert
   endtry
@@ -235,6 +223,8 @@ if has('autocmd')
   autocmd Filetype python   setlocal expandtab shiftwidth=4 tabstop=4
   autocmd FileType vim      setlocal expandtab shiftwidth=2 tabstop=2
   autocmd Filetype sh       setlocal expandtab shiftwidth=2 tabstop=2
+  autocmd Filetype yaml     setlocal expandtab shiftwidth=2 tabstop=2
+  autocmd Filetype Dockerfile setlocal expandtab shiftwidth=2 tabstop=2
   autocmd Filetype autohotkey setlocal expandtab shiftwidth=4 tabstop=4
 endif
 
