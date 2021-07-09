@@ -2,9 +2,6 @@
 " Maintainer: Wang Jun
 " Last Change: 2018-12-26
 
-let s:enable_plug = 1
-let s:is_win = has('win32') || has('win64')
-
 set nocompatible
 
 if has('autocmd')
@@ -12,93 +9,33 @@ if has('autocmd')
   au!
 endif
 
-" Check vimrc position
+if has('windows') || has("gui_running")
+  source $VIMRUNTIME/mswin.vim
+endif
+
+language messages en_US.UTF-8
+
+if 0
+" Plug
 let s:vimrc_path = fnamemodify(expand("$MYVIMRC"), ":p:h")
 let s:vimrc_name = fnamemodify(expand("$MYVIMRC"), ":p:t")
-if "vimrc" == s:vimrc_name
-  let s:vim_dir = s:vimrc_path
-elseif ".vimrc" == s:vimrc_name
-  let s:vim_dir = s:vimrc_path . "/.vim"
-elseif "_vimrc" == s:vimrc_name
-  let s:vim_dir = s:vimrc_path . "/vimfiles"
-endif
 
-if !isdirectory(s:vim_dir)
-  language messages en_US.UTF-8
-  echo "NOT exist .vim/vimfiles directory or is not a directory, won't load plug."
-  let s:enable_plug = 0
-endif
-
-" vim-plug {{{
-if filereadable(s:vim_dir . '/autoload/plug.vim') && s:enable_plug
-  " vim-plug, see https://github.com/junegunn/vim-plug
-  call plug#begin(s:vim_dir . '/plugged')
-
+if "vimrc" == s:vimrc_name && filereadable(s:vimrc_path . '/autoload/plug.vim')
+  call plug#begin(s:vimrc_path . '/plugged')
   " Make sure you use single quotes
-
-  Plug 'vim-airline/vim-airline'
-  Plug 'vim-airline/vim-airline-themes'
-  Plug 'tpope/vim-fugitive'
-
-  " Color schemes
-  Plug 'aradunovic/perun.vim'
-
-  Plug 'bestw/vim-cheat40'
-  Plug 'inkarkat/vim-mark', { 'commit': '0f8628d'}
-  Plug 'jiangmiao/auto-pairs'
-  "Plug 'tpope/vim-surround'
-
-  Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
-  Plug 'Xuyuanp/nerdtree-git-plugin', { 'on': 'NERDTreeToggle' }
-
-  " Comment
-  Plug 'scrooloose/nerdcommenter', { 'for': ['c', 'cpp', 'python', 'vim'] }
-  Plug 'vim-scripts/DoxygenToolkit.vim', { 'for': ['c', 'cpp', 'python'] }
-
-  Plug 'vim-scripts/std_c.zip', { 'for': 'c' }
-  Plug 'octol/vim-cpp-enhanced-highlight', { 'for': 'cpp' }
-  Plug 'hdima/python-syntax', { 'for': 'python' }
-  Plug 'pboettch/vim-cmake-syntax', { 'for': 'cmake' }
-  Plug 'PProvost/vim-ps1', { 'for': 'ps1' }
-  Plug 'peterhoeg/vim-qml', {'for': 'qml'}
-
-  Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }
-
-  " TODO: snippets
-  " Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
-
-  " TODO: formart: python ...
-  Plug 'rhysd/vim-clang-format', { 'for': ['c', 'cpp'] }
-
-  " TODO: syntax check
-  "Plug 'scrooloose/syntastic'
-
-  " TODO: code completion
-  "Plug 'Valloric/YouCompleteMe'
-
-  " TODO: search enhance
-  "Plug 'ctrlpvim/ctrlp.vim'
-  "Plug 'dyng/ctrlsf.vim'
-
-  " TODO: multiline edit
-  "Plug 'terryma/vim-multiple-cursors'
-
-  " TODO: indent line show
-  "Plug 'yggdroot/indentline'
 
   " Initialize plugin system
   call plug#end()
 endif
-"}}}
+endif
 
-" 删除indent自动缩进(行首空白符),eol换行符,start插入模式开始处之前的字符
+" 在一行开头按退格键删除 indent,eol,start
 set backspace=indent,eol,start
-" 使移动光标的键在多行之间使用
+" 允许指定键跨越行边界: backspace, space
 set whichwrap=b,s
 " 多字节字符排版:分行,不插入空格
 set formatoptions+=mM
 
-" Encoding {{{
 " 尝试的字符编码列表
 set fileencodings=ucs-bom,utf-8,cp936,gb18030,big5,latin1
 " 设置终端编码,指定键盘输入和显示的字符编码
@@ -109,20 +46,9 @@ set encoding=utf-8
 " need 'encoding' is unicode encoding
 "set ambiwidth=double
 
-" vim message language: en_US.UTF-8 , zh_CN.UTF-8
-language messages en_US.UTF-8
 if has("gui_running")
-  set langmenu=en_US.UTF-8
-  source $VIMRUNTIME/delmenu.vim
-  source $VIMRUNTIME/menu.vim
-endif
-"}}}
-
-if has("gui_running")
-  set go-=T
-  set go-=m
   " Windows GUI font settings
-  if has("win32")
+  if has("windows")
     set guifont=Iosevka:h13,
           \Courier_New:h12
     " gfw need 'encoding' = utf-8
@@ -136,7 +62,7 @@ if has("gui_running")
   endif
 
   if !exists("g:cols_lines_already_setting")
-    set columns=110 lines=32
+    set columns=120 lines=32
     " Only set once
     let g:cols_lines_already_setting = &columns
   endif
@@ -146,23 +72,23 @@ if has('mouse')
   set mouse=a
 endif
 
-" 显示设置
 if &t_Co > 2 || has("gui_running")
-  if !has("gui_running")
-    set t_Co=256
-  endif
+  set t_Co=256
+endif
 
+if has("gui_running")
   try
-    colorscheme perun
+    colorscheme pencil
+    set background=light
   catch
     colorscheme desert
+    set background=dark
   endtry
-  set background=dark
-  " Vim syntax highlight, will overrule the user's setttings
-  syntax on
-  " 搜索结果高亮
-  set hlsearch
 endif
+
+syntax on
+" 搜索结果高亮
+set hlsearch
 
 " 增量搜索
 set incsearch
@@ -180,13 +106,13 @@ set showcmd
 " Tab补全时命令行上行显示可能的匹配
 set wildmenu
 
-" TODO: viminfo
-"set viminfo=
 set history=1000
 set nobackup
 set noswapfile
 " 文件被其他程序修改时自动载入
 set autoread
+
+set vb t_vb=
 
 " TODO:剪贴板
 "set clipboard+=unnamed
@@ -202,6 +128,7 @@ set shiftround
 set linebreak
 let &showbreak='↪ '
 
+" 显示特殊字符
 set list
 set listchars=tab:→\ ,eol:↲,nbsp:␣,trail:•,extends:⟩,precedes:⟨
 
@@ -224,15 +151,9 @@ if has('autocmd')
   autocmd FileType vim      setlocal expandtab shiftwidth=2 tabstop=2
   autocmd Filetype sh       setlocal expandtab shiftwidth=2 tabstop=2
   autocmd Filetype yaml     setlocal expandtab shiftwidth=2 tabstop=2
-  autocmd Filetype Dockerfile setlocal expandtab shiftwidth=2 tabstop=2
-  autocmd Filetype autohotkey setlocal expandtab shiftwidth=4 tabstop=4
 endif
 
-" Key mappings {{{
-if s:is_win || has("gui_running")
-  source $VIMRUNTIME/mswin.vim
-endif
-let mapleader = "\<SPACE>" "http://blog.jobbole.com/87481/
+let mapleader = "\<SPACE>"
 
 " Open vimrc file
 map  <S-F12> :e! $MYVIMRC<CR>
@@ -242,84 +163,13 @@ imap <S-F12> <Esc>:e! $MYVIMRC<CR>a
 nnoremap <C-TAB> :bn<CR>
 nnoremap <C-S-TAB> :bp<CR>
 
-nnoremap <F2> :NERDTreeToggle<CR>
-nmap <F8> :TagbarToggle<CR>
-
 " Toggle fold za?
 if has('folding')
   nnoremap <LEADER><SPACE> @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR>
 endif
 
-nnoremap <LEADER>q :q<CR>
-nnoremap <LEADER>w :w<CR>
-nnoremap <LEADER>b :bd<CR>
-nnoremap <LEADER>d :e ++ff=dos<CR>
-
-" tag jumps
-nnoremap <LEADER>tt <ESC>g<C-]>
-nnoremap <LEADER>tr <C-T>
-
-" F1
-nnoremap <F1> <NOP>
-nnoremap <F1> :Cheat40<CR>
-"}}}
-
-" Plug settings {{{
-" vim-airline
-let g:airline_powerline_fonts = 1
-let g:airline_theme = 'bubblegum'
-if !exists('g:airline_symbols')
-  let g:airline_symbols = {}
-endif
-" Open tabline
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#buffer_nr_show = 1
-let g:airline#extensions#tabline#formatter = 'unique_tail'
-let g:airline#extensions#whitespace#enabled = 0
-let g:airline#extensions#whitespace#symbol = '!'
-let g:airline_left_sep = ''
-let g:airline_left_alt_sep = ''
-let g:airline_right_sep = ''
-let g:airline_right_alt_sep = ''
-let g:airline_symbols.branch = ''
-let g:airline_symbols.readonly = ''
-let g:airline_symbols.linenr = '☰'
-let g:airline_symbols.maxlinenr = ''
-
-" nerdtree and nerdtree-git-plugin
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-
-let g:NERDTreeIndicatorMapCustom = {
-      \ "Modified"  : "m",
-      \ "Staged"    : "+",
-      \ "Untracked" : "*",
-      \ "Renamed"   : "R",
-      \ "Unmerged"  : "═",
-      \ "Deleted"   : "✖",
-      \ "Dirty"     : "✗",
-      \ "Clean"     : "✔︎",
-      \ 'Ignored'   : '☒',
-      \ "Unknown"   : "?"
-      \ }
-
-" NERD Commenter
-let g:NERDSpaceDelims = 1
-let g:NERDTrimTrailingWhitespace = 1
-
-" syntax/python.vim
-let g:python_highlight_all = 1
-let b:python_version_2 = 1
-
-" syntax/c.vim std_c.zip
-let c_syntax_for_h = 1
-let c_C99 = 1
-let c_cpp_warn = 1
-let c_warn_8bitchars = 1
-let c_warn_multichar = 1
-let c_warn_digraph = 1
-let c_warn_trigraph = 1
-let c_space_errors = 1
-let c_minlines = 200
+" quit
+nnoremap <LEADER>q <ESC>:bd<CR>
 
 " cpp syntax highlight settings
 let g:cpp_class_scope_highlight = 1
@@ -327,9 +177,12 @@ let g:cpp_member_variable_highlight = 1
 let g:cpp_class_decl_highlight = 1
 let g:cpp_concepts_highlight = 1
 
-" vim-clang-format
-let g:clang_format#detect_style_file = 1
+" tag jump
+nnoremap <LEADER>j <ESC>g<C-]>
+nnoremap <LEADER>b <C-T>
 
-"}}}
+" taglist
+map <F2> :TlistToggle<CR>
+imap <F2> <Esc>:TlistToggle<CR>
 
 " vim:et:sw=2:ts=2:ff=unix:fenc=utf8:fdm=marker:
