@@ -1,6 +1,6 @@
 " vimrc
 " Maintainer: Wang Jun
-" Last Change: 2018-12-26
+" Last Change: 2021-07-14
 
 set nocompatible
 
@@ -14,20 +14,6 @@ if has('windows') || has("gui_running")
 endif
 
 language messages en_US.UTF-8
-
-if 0
-" Plug
-let s:vimrc_path = fnamemodify(expand("$MYVIMRC"), ":p:h")
-let s:vimrc_name = fnamemodify(expand("$MYVIMRC"), ":p:t")
-
-if "vimrc" == s:vimrc_name && filereadable(s:vimrc_path . '/autoload/plug.vim')
-  call plug#begin(s:vimrc_path . '/plugged')
-  " Make sure you use single quotes
-
-  " Initialize plugin system
-  call plug#end()
-endif
-endif
 
 " 在一行开头按退格键删除 indent,eol,start
 set backspace=indent,eol,start
@@ -46,44 +32,12 @@ set encoding=utf-8
 " need 'encoding' is unicode encoding
 "set ambiwidth=double
 
-if has("gui_running")
-  " Windows GUI font settings
-  if has("windows")
-    set guifont=Iosevka:h13,
-          \Courier_New:h12
-    " gfw need 'encoding' = utf-8
-    set guifontwide=Iosevka:h13,
-          \YouYuan:h12
-  elseif has("unix")
-    set guifont=Iosevka\ 13,
-          \DejaVu\ Sans\ Mono\ 12
-    set guifontwide=Iosevka\ 13,
-          \Noto\ Sans\ Mono\ CJK\ SC\ 12
-  endif
-
-  if !exists("g:cols_lines_already_setting")
-    set columns=120 lines=32
-    " Only set once
-    let g:cols_lines_already_setting = &columns
-  endif
-endif
-
 if has('mouse')
   set mouse=a
 endif
 
 if &t_Co > 2 || has("gui_running")
   set t_Co=256
-endif
-
-if has("gui_running")
-  try
-    colorscheme pencil
-    set background=light
-  catch
-    colorscheme desert
-    set background=dark
-  endtry
 endif
 
 syntax on
@@ -99,8 +53,7 @@ set showmatch
 " 显示行号
 set number
 "set relativenumber
-" 设置光标所在的行
-set cursorline
+
 " 显示未完成命令,可视模式里显示选择区域的大小
 set showcmd
 " Tab补全时命令行上行显示可能的匹配
@@ -128,15 +81,55 @@ set shiftround
 set linebreak
 let &showbreak='↪ '
 
-" 显示特殊字符
-set list
-set listchars=tab:→\ ,eol:↲,nbsp:␣,trail:•,extends:⟩,precedes:⟨
-
 set autochdir
 set tags=tags;
 
 set foldmethod=indent
 set foldlevel=99
+
+if has("gui_running")
+  " 高亮光标所在的行
+  set cursorline
+
+  " 显示特殊字符
+  set list
+  set listchars=tab:→\ ,eol:↲,nbsp:␣,trail:•,extends:⟩,precedes:⟨
+endif
+
+if has("gui_running")
+  set guioptions-=T
+  "set guioptions-=m
+
+  " Windows GUI font settings
+  if has("windows")
+    set guifont=Iosevka:h13,
+          \Courier_New:h12
+    " gfw need 'encoding' = utf-8
+    set guifontwide=Iosevka:h13,
+          \YouYuan:h12
+  elseif has("unix")
+    set guifont=Iosevka\ 13,
+          \DejaVu\ Sans\ Mono\ 12
+    set guifontwide=Iosevka\ 13,
+          \Noto\ Sans\ Mono\ CJK\ SC\ 12
+  endif
+
+  if !exists("g:cols_lines_already_setting")
+    set columns=120 lines=35
+    " Only set once
+    let g:cols_lines_already_setting = &columns
+  endif
+
+  try
+    colorscheme pencil
+    set background=light
+  endtry
+
+  set laststatus=2
+  set statusline=%F%m%r%w[%Y]
+  set statusline+=%=%l,%v\ [%{''.(&fenc!=''?&fenc:&enc).''}%{(&bomb?\",BOM\":\"\")}][%{&ff}][%p%%]
+
+endif
 
 if has('autocmd')
   filetype plugin indent on
