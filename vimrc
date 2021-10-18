@@ -9,7 +9,7 @@ if has('autocmd')
   au!
 endif
 
-if has('windows') || has("gui_running")
+if has('win32') || has("gui_running")
   source $VIMRUNTIME/mswin.vim
 endif
 
